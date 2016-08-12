@@ -1,14 +1,35 @@
 #!/usr/bin/python
+# Example using a character LCD connected to a Raspberry Pi
 
 import os
-import sys
 import base64
 import xml.etree.ElementTree
-from time import *
+import time
 
-# Import Lcdproc server stuff
-from lcdproc.server import Server
+# LCD SETTINGS -------------------------------------------------- #
 
+import sys
+sys.path.insert(0, "Adafruit_Python_CharLCD")
+import Adafruit_CharLCD as LCD
+
+# Raspberry Pi pin configuration (for Model B)
+lcd_rs        = 7
+lcd_en        = 8
+lcd_d4        = 25
+lcd_d5        = 24
+lcd_d6        = 23
+lcd_d7        = 18
+lcd_backlight = 4
+
+# Define LCD column and row size for 16x2 LCD.
+lcd_columns = 16
+lcd_rows    = 2
+
+# For some reason, my LCD backlight switch is backwards
+off = 1
+on = 0
+
+# LOGGING ------------------------------------------------------- #
 # Set up the logging, based on the command line arguments
 
 import logging
@@ -20,11 +41,11 @@ parser.add_argument('-f', '--file', help='Log debug information to file', action
 parser.add_argument('-q', '--quiet', help='No output to screen', action="store_true")
 args = parser.parse_args()
 if args.debug:
-        loglevel = logging.DEBUG
+	loglevel = logging.DEBUG
 elif args.quiet:
 	loglevel = 60
 else:
-        loglevel = logging.INFO
+    loglevel = logging.INFO
 
 # logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',filename='example.log',level=loglevel)
 
@@ -43,11 +64,14 @@ logger.addHandler(ch)
 
 # create file handler which logs messages to file if user specifed it on the command line
 if args.file:
-        fh = logging.FileHandler('logger.log', 'w')
-        fh.setLevel(loglevel)
-        fh.setFormatter(file_formatter)
-        logger.addHandler(fh)
+    fh = logging.FileHandler('logger.log', 'w')
+    fh.setLevel(loglevel)
+    fh.setFormatter(file_formatter)
+    logger.addHandler(fh)
 
+
+
+# HELPER FUNCTIONS --------------------------------------------- #
 
 # Some magic to decode ascii digits to string
 def ascii_integers_to_string(string, base=16, digits_per_char=2):
@@ -62,24 +86,14 @@ def pad_string(string_to_pad):
 	else:
 		return string_to_pad
 
+
+
+# MAIN ---------------------------------------------------------- #
+
 def main():
 	# initialize the connection
-	lcd = Server(debug=False)
-    	lcd.start_session()
-
-	# setup a screen
-	screen1 = lcd.add_screen("Screen1")
-	screen1.set_heartbeat("off")
-	screen1.set_duration(10)
-	screen1.set_priority("info")
-
-	# add fields to the screen - in this case we're just going to use scrolling text fields
-	title = screen1.add_title_widget("Title", text = "Airplay")
-	line1 = screen1.add_scroller_widget("Line1", top = 2, direction = "m",  speed=3, text = "")
-	line2 = screen1.add_scroller_widget("Line2", top = 3, direction = "m",  speed=3, text = "")
-	line3 = screen1.add_scroller_widget("Line3", top = 4, direction = "m",  speed=3, text = "")
-
-
+	lcd = LCD.Adafruit_CharLCD(lcd_rs, lcd_en, lcd_d4, lcd_d5, lcd_d6, lcd_d7,
+                           lcd_columns, lcd_rows, lcd_backlight)
 
 	path = "/tmp/shairport-sync-metadata"
 	fifo = open(path, "r")
@@ -125,16 +139,16 @@ def main():
 
 					if code == "pend":
 						logger.info("Playback finished...")
-						screen1.clear()
+						lcd.clear()
 						title = ""
 						album = ""
 						artist = ""
 						info = ""
 						updateflag = True
-						screen1.set_backlight("off")
+						lcd.set_backlight(off)
 
 					if code == "pbeg":
-						screen1.set_backlight("on")
+						lcd.set_backlight(on)
 						logger.info("Playback started...")
 						# device.lcd_clear()
 					if code == "snua":
@@ -143,11 +157,11 @@ def main():
 						updateflag = True
 					if code == "pvol":
 						# set up the volume screen
-						vol_screen = lcd.add_screen("Volume")
-						vol_screen.set_heartbeat("off")
-						vol_title = vol_screen.add_title_widget("vol_title", text = "Volume")
-						vol_screen.set_priority("foreground")
-						vol_screen.set_timeout(2)
+# 						vol_screen = lcd.add_screen("Volume")
+# 						vol_screen.set_heartbeat("off")
+# 						vol_title = vol_screen.add_title_widget("vol_title", text = "Volume")
+# 						vol_screen.set_priority("foreground")
+# 						vol_screen.set_timeout(2)
 
 
 						logger.info("volume information received")
@@ -183,12 +197,11 @@ def main():
 			if updateflag:
 				logger.info("\nTitle: " + title + "\nArtist: " + artist + "\nAlbum: " + album)
 				# update the lines with the new contents of the variables
-				line1.set_text(pad_string(title))
-				line2.set_text(pad_string(artist))
-				line3.set_text(pad_string(album))
+				lcd.set_backlight(on)
+				lcd.clear()
+				lcd.message(pad_string(title) + "\n" + pad_string(artist))
 				updateflag = False
 	fifo.close()
-
 
 if __name__ == "__main__":
 	main()
