@@ -15,20 +15,17 @@ A fork of John Harris’s [lcdtunes](https://github.com/john-a-harris/lcdtunes) 
 
 ## LCD Wiring
 
-This is the wiring for a **3.3V** LCD Display:
+This is the wiring for a **3.3V** LCD Display.
 
 ![Wiring diagram from Adafruit](https://cdn-learn.adafruit.com/assets/assets/000/018/260/medium800/raspberry_pi_RaspberryPiRGB_bb.png?1405984925)
 
-## Requirements, etc.
-
-To come…
-
 ## Todo
 
+- [ ] Time-out backlight
 - [ ] Add scrolling for long titles
 - [ ] Toggle backlight on-and-off after set period
 - [ ] Finish README instructions/requirements/etc.
 - [ ] Install as launch service
 - [ ] Tidy dependencies and install process
-- [ ] Add support for Spotify
+- [ ] Add support for Spotify (and other services? Homebridge?)
 - [ ] Redesign as API for other services to display information?
