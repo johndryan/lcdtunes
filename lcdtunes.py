@@ -86,8 +86,6 @@ def pad_string(string_to_pad):
 	else:
 		return string_to_pad
 
-
-
 # MAIN ---------------------------------------------------------- #
 
 def main():
@@ -131,26 +129,25 @@ def main():
 				else:
 					data = ""
 				if type == "ssnc":
-					#if code == "pfls":
-						#title = ""
-						#album = ""
-						#artist = ""
-						#updateflag = True
-
+					if code == "pfls":
+						logger.info("Playback flushed...")
+						lcd.set_backlight(off)
+# 						title = ""
+# 						album = ""
+# 						artist = ""
+# 						updateflag = True
 					if code == "pend":
 						logger.info("Playback finished...")
-						lcd.clear()
 						title = ""
 						album = ""
 						artist = ""
 						info = ""
 						updateflag = True
-						lcd.set_backlight(off)
-
-					if code == "pbeg":
+					if code == "prsm":
 						lcd.set_backlight(on)
+						logger.info("Playback resumed...")
+					if code == "pbeg":
 						logger.info("Playback started...")
-						# device.lcd_clear()
 					if code == "snua":
 						logger.info("User agent received")
 						info = data
@@ -162,8 +159,6 @@ def main():
 # 						vol_title = vol_screen.add_title_widget("vol_title", text = "Volume")
 # 						vol_screen.set_priority("foreground")
 # 						vol_screen.set_timeout(2)
-
-
 						logger.info("volume information received")
 				if type == "core":
 					#process the codes that we're interested in
@@ -197,9 +192,13 @@ def main():
 			if updateflag:
 				logger.info("\nTitle: " + title + "\nArtist: " + artist + "\nAlbum: " + album)
 				# update the lines with the new contents of the variables
-				lcd.set_backlight(on)
 				lcd.clear()
 				lcd.message(pad_string(title) + "\n" + pad_string(artist))
+				# only switch backlight on if no title data (i.e. paused)
+				if title == "":
+					lcd.set_backlight(off)
+				else:
+					lcd.set_backlight(on)
 				updateflag = False
 	fifo.close()
 
