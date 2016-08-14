@@ -11,7 +11,12 @@ A fork of John Harris’s [lcdtunes](https://github.com/john-a-harris/lcdtunes) 
 	2. `sudo apt-get install build-essential python-dev python-smbus python-pip`
 	3. `sudo pip install RPi.GPIO`
 	4. `sudo python Adafruit_Python_CharLCD/setup.py install`
-4. …
+4. To run as a `systemd` service on startup:
+	1. Copy service: ```sudo cp lcdtunes.service /lib/systemd/system/lcdtunes.service```
+	2. Create a symbolic link to the service script: ```sudo ln -s /lib/systemd/system/lcdtunes.service /etc/systemd/system/lcdtunes.service```
+	3. Make systemd aware of your new service: ```sudo systemctl daemon-reload
+sudo systemctl enable lcdtunes.service
+sudo systemctl start lcdtunes.service```
 
 ## LCD Wiring
 
@@ -25,7 +30,7 @@ This is the wiring for a **3.3V** LCD Display.
 - [ ] Add scrolling for long titles
 - [ ] Toggle backlight on-and-off after set period
 - [ ] Finish README instructions/requirements/etc.
-- [ ] Install as launch service
+- [x] Install as launch service
 - [ ] Tidy dependencies and install process
 - [ ] Add support for Spotify (and other services? Homebridge?)
 - [ ] Redesign as API for other services to display information?

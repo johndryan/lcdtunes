@@ -1,0 +1,19 @@
+[Unit]
+Description=LCD Shairport Metadata Display
+After=multi-user.target
+Requires=shairport-sync.service
+After=shairport-sync.service
+
+[Service]
+Type=idle
+# Delay to allow shaiport-sync to get up and running
+OnBootSec=5s
+WorkingDirectory=/home/pi/lcdtunes
+# Arguements: -f = log to file, -q = quiet
+ExecStart=/usr/bin/python lcdtunes.py -q
+# Should I run as it's own user?
+User=pi
+Group=pi
+
+[Install]
+WantedBy=multi-user.target
