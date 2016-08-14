@@ -1,5 +1,5 @@
 #!/bin/bash
-killall lcdproc
+# killall lcdproc
 /home/pi/lcdtunes/lcdtunes.py -q &
 
 sleep 2

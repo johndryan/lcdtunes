@@ -2,4 +2,4 @@
 
 killall lcdtunes.py
 echo `whoami`
-sudo /usr/local/bin/lcdproc
+# sudo /usr/local/bin/lcdproc
