@@ -26,6 +26,8 @@ This is the wiring for a **3.3V** LCD Display.
 
 ## Todo
 
+- [x] Basic backlight on/off based on playback
+- [ ] Refine backlight control
 - [ ] Time-out backlight
 - [ ] Add scrolling for long titles
 - [ ] Toggle backlight on-and-off after set period
