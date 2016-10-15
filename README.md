@@ -1,6 +1,8 @@
-# LCC Display of Shairport-Sync Metadata on Raspberry Pi
+# LCD Display of Shairport-Sync Metadata on Raspberry Pi
 
 A fork of John Harris’s [lcdtunes](https://github.com/john-a-harris/lcdtunes) designed to show Airplay Metadata (from [Shairport](https://github.com/mikebrady/shairport-sync)) on an [LCD Display](https://www.sparkfun.com/products/9051) (one that utilizes the common ST7066/HD44780 parallel interface) attached to a Raspberry Pi. My fork uses the [Adafruit LCD library](https://github.com/adafruit/Adafruit_Python_CharLCD). 
+
+![LCDtunes in Action](http://i.imgur.com/pV7KLJi.jpg "LCDtunes displaying song information while connected to my hifi")
 
 ## Installation
 
